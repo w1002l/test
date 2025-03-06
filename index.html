@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>待办事项列表</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .container {
+        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        width: 350px;
+        transition: all 0.3s ease;
+      }
+      .container:hover {
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
+      }
+
+      h2 {
+        margin-top: 0;
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+      }
+      li {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      li input[type="checkbox"] {
+        margin-right: 10px;
+      }
+      input[type="text"] {
+        width: calc(100% - 80px);
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-right: 10px;
+        box-sizing: border-box;
+      }
+      button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        background: linear-gradient(135deg, #6dd5ed, #2193b0);
+        color: white;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+      button:hover {
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+      .completed {
+        text-decoration: line-through;
+        color: #888;
+      }
+      .summary {
+        margin-top: 20px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>待办事项列表</h2>
+      <ul id="todo-list">
+        <li>
+          <input type="checkbox" onchange="updateStatus(this)" />
+          <span>任务1</span>
+        </li>
+        <li>
+          <input type="checkbox" onchange="updateStatus(this)" />
+          <span>任务2</span>
+        </li>
+        <li>
+          <input type="checkbox" onchange="updateStatus(this)" />
+          <span>任务3</span>
+        </li>
+      </ul>
+      <input type="text" id="new-task" placeholder="添加新任务" />
+
+      <button onclick="addTask()">添加</button>
+      <div class="summary">
+        待办:
+        <span id="pending-count">3</span>
+        | 已办:
+        <span id="completed-count">0</span>
+        | 总计:
+        <span id="total-count">3</span>
+      </div>
+    </div>
+
+    <script>
+      function addTask() {
+        const taskInput = document.getElementById("new-task");
+        const taskText = taskInput.value.trim();
+        if (taskText === "") {
+          alert("请输入任务内容");
+          return;
+        }
+
+        const newTask = document.createElement("li");
+        newTask.innerHTML = `<input type="checkbox" onchange="updateStatus(this)"><span>${taskText}</span>`;
+        document.getElementById("todo-list").appendChild(newTask);
+
+        taskInput.value = "";
+
+        updateStatus(newTask.querySelector("input"));
+      }
+      function updateStatus(checkbox) {
+        const listItem = checkbox.parentElement;
+        const pendingCount = document.getElementById("pending-count");
+        const completedCount = document.getElementById("completed-count");
+        const totalCount = document.getElementById("total-count");
+
+        if (checkbox.checked) {
+          listItem.querySelector("span").classList.add("completed");
+        } else {
+          listItem.querySelector("span").classList.remove("completed");
+        }
+
+        const totalTasks = document.querySelectorAll("#todo-list li").length;
+        const completedTasks = document.querySelectorAll("#todo-list li input:checked").length;
+        const pendingTasks = totalTasks - completedTasks;
+
+        pendingCount.textContent = pendingTasks;
+        completedCount.textContent = completedTasks;
+        totalCount.textContent = totalTasks;
+      }
+    </script>
+  </body>
+</html>
